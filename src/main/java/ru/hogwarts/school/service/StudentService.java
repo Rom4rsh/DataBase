@@ -9,13 +9,13 @@ public interface StudentService {
 
     public Student findStudent(long id);
 
-    public Student deleteStudents(long id);
+    public void deleteStudents(long id);
 
     public Student editStudent(long id, Student student);
 
-    public Collection<Student> getAllStudents();
+//    public Collection<Student> getAllStudents();
 
     public Student createStudent(Student student);
 
-    public Collection<Student>findByAge(int age);
+//    public Collection<Student>findByAge(int age);
 }

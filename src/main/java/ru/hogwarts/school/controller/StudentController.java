@@ -47,11 +47,11 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Collection<Student>> findByAge(@PathVariable(required = false) int age) {
-        if (age > 0) {
-           return ResponseEntity.ok(studentService.findByAge(age));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
-    }
+//    @GetMapping
+//    public ResponseEntity<Collection<Student>> findByAge(@PathVariable(required = false) int age) {
+//        if (age > 0) {
+//           return ResponseEntity.ok(studentService.findByAge(age));
+//        }
+//        return ResponseEntity.ok(Collections.emptyList());
+//    }
 }

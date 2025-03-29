@@ -11,13 +11,11 @@ public interface FacultyService {
 
     public Faculty findFaculty(long id);
 
-
-    public Faculty deleteFaculties(long id);
-
+    public void deleteFaculties(long id);
 
     public Faculty editFaculty(long id, Faculty faculty);
 
-    public Collection<Faculty> findByColor(String color);
+//    public Collection<Faculty> findByColor(String color);
 
 
 }
