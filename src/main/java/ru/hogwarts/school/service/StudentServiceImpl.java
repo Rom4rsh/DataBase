@@ -9,17 +9,16 @@ import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-
-    @Autowired
     private final StudentRepository studentRepository;
 
+    @Autowired
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
     @Override
     public Student createStudent(Student student) {
-       return studentRepository.save(student);
+        return studentRepository.save(student);
     }
 
 //    @Override
@@ -45,8 +44,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student editStudent(long id, Student student) {
-       return studentRepository.save(student);
+        student.setId(id);
+        return studentRepository.save(student);
     }
+
+    
 
 //    @Override
 //    public Collection<Student> getAllStudents() {
