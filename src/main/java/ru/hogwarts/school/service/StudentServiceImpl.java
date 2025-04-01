@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
@@ -21,16 +22,15 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(student);
     }
 
-//    @Override
-//    public Collection<Student> findByAge(int age) {
-//        ArrayList<Student> result = new ArrayList<>();
-//        for(Student student: students.values()){
-//            if(student.getAge()==age){
-//                result.add(student);
-//            }
-//        }
-//        return result;
-//    }
+    @Override
+    public Collection<Student> findByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
+    }
+
+    @Override
+    public Faculty getFacultyByStudent(Long studentId) {
+        return studentRepository.findFacultyByStudentId(studentId);
+    }
 
     @Override
     public Student findStudent(long id) {
@@ -48,10 +48,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(student);
     }
 
-    
+    @Override
+    public Collection<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
 
-//    @Override
-//    public Collection<Student> getAllStudents() {
-//        return students.values();
-//    }
 }

@@ -3,6 +3,7 @@ package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 
 import java.util.*;
@@ -32,13 +33,11 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyRepository.save(faculty);
     }
 
-//    public Collection<Faculty> findByColor(String color){
-//        ArrayList<Faculty> result = new ArrayList<>();
-//        for(Faculty faculty:faculties.values()){
-//            if(Objects.equals(faculty.getColor(),color)){
-//                result.add(faculty);
-//            }
-//        }
-//        return result;
-//    }
+    public Collection<Faculty> getAllFaculty() {
+        return facultyRepository.findAll();
+    }
+
+    public List<Student> getStudentsByFaculty(Long facultyId) {
+        return facultyRepository.findStudentsByFacultyId(facultyId);
+    }
 }
