@@ -1,14 +1,36 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
+
+@Entity
 public class Faculty {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private String color;
 
-    public Faculty(long id, String name, String color) {
-        this.id = id;
+    @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Student> students = new ArrayList<>();
+
+    public Faculty() {
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public Faculty(String name, String color) {
         this.name = name;
         this.color = color;
     }
@@ -54,4 +76,3 @@ public class Faculty {
         return "Faculty{" + "id=" + id + ", name='" + name + '\'' + ", color='" + color + '\'' + '}';
     }
 }
-

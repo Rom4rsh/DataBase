@@ -1,15 +1,33 @@
 package ru.hogwarts.school.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
 public class Student {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private int age;
 
-    public Student(long id, String name, int age) {
-        this.id = id;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "faculty_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "faculty_id",nullable = false)
+    @JsonBackReference
+    private Faculty faculty;
+
+    public Student() {
+    }
+
+    public Student(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -20,6 +38,10 @@ public class Student {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
     }
 
     public String getName() {

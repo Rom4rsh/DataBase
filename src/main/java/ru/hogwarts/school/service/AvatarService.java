@@ -1,0 +1,15 @@
+package ru.hogwarts.school.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.model.Avatar;
+
+import java.io.IOException;
+
+@Service
+public interface AvatarService {
+
+    void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException;
+
+    Avatar findAvatar(Long studentID);
+}
