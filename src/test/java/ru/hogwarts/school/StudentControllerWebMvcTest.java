@@ -40,11 +40,6 @@ public class StudentControllerWebMvcTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-//    @MockitoSpyBean
-//    private StudentRepository studentRepository;
-//
-//    @InjectMocks
-//    private StudentController studentController;
 
     @Test
     void testGetAndCreateStudent() throws Exception {
