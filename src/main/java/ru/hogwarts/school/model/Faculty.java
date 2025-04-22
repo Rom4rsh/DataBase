@@ -7,7 +7,7 @@ import java.util.*;
 
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,9 @@ public class Faculty {
     private String name;
     private String color;
 
-    @OneToMany(mappedBy = "faculty")
-    //fetch = FetchType.LAZY)
-//    @JsonManagedReference
+    @OneToMany(mappedBy = "faculty",
+    fetch = FetchType.LAZY)
+   @JsonManagedReference
     private Set<Student> students = new HashSet<>();
 
     public Faculty() {
