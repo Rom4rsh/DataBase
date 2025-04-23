@@ -17,8 +17,8 @@ public class Faculty {
     private String color;
 
     @OneToMany(mappedBy = "faculty",
-    fetch = FetchType.LAZY)
-   @JsonManagedReference
+            fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Student> students = new HashSet<>();
 
     public Faculty() {

@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -79,6 +77,24 @@ public class StudentController {
     public ResponseEntity<Faculty> getFacultyByStudent(@PathVariable Long id) {
         Faculty faculty = studentService.getFacultyByStudent(id);
         return faculty != null ? ResponseEntity.ok(faculty) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getStudentCount() {
+        Long student = studentService.getStudentCount();
+        return student != null ? ResponseEntity.ok(student) : ResponseEntity.notFound().build();
+
+    }
+
+    @GetMapping("/avgAge")
+    public ResponseEntity<Long> getStudentAvgAge() {
+        return ResponseEntity.ok(studentService.getStudentAvgAge());
+    }
+
+    @GetMapping("/lastStudent")
+    public ResponseEntity<List<Student>> getFiveLastStudent() {
+        List<Student> student = studentService.getFiveLastStudent();
+        return ResponseEntity.ok(student);
     }
 
 }

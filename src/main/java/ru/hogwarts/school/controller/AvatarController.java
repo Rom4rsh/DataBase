@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.mapping.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,10 +29,17 @@ import java.nio.file.Path;
 @RequestMapping("avatar")
 public class AvatarController {
     private final AvatarService avatarService;
+    private final AvatarRepository avatarRepository;
 
-    public AvatarController(AvatarServiceImpl avatarServiceImpl) {
-        this.avatarService = avatarServiceImpl;
+    public AvatarController(AvatarService avatarService, AvatarRepository avatarRepository) {
+        this.avatarService = avatarService;
+        this.avatarRepository = avatarRepository;
     }
+
+//    public AvatarController(AvatarServiceImpl avatarServiceImpl) {
+//        this.avatarService = avatarServiceImpl;
+//    }
+
 
     @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
@@ -64,6 +73,11 @@ public class AvatarController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    @GetMapping
+    public Page<Avatar> getAll(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
+        return avatarRepository.findAll(PageRequest.of(pageNumber, pageSize));
 
     }
 }
