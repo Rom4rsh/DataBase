@@ -3,9 +3,8 @@ package ru.hogwarts.school.service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
-import java.security.cert.CertPath;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface StudentService {
 
@@ -22,4 +21,10 @@ public interface StudentService {
     public Collection<Student> findByAgeBetween(int min, int max);
 
     public Faculty getFacultyByStudent(Long studentId);
+
+    public Long getStudentCount();
+
+    public Long getStudentAvgAge();
+
+    public List<Student> getFiveLastStudent();
 }
