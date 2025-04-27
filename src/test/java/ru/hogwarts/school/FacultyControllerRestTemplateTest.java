@@ -1,5 +1,7 @@
 package ru.hogwarts.school;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FacultyControllerRestTemplateTest {
@@ -20,12 +23,15 @@ public class FacultyControllerRestTemplateTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @LocalServerPort
+    private int port;
+
+    private Faculty testFaculty;
+    private Student testStudent;
+
     private String getUrl(String path) {
         return "http://localhost:" + port + path;
     }
-
-    @LocalServerPort
-    private int port;
 
     private Faculty createTestFaculty() {
         Faculty faculty = new Faculty();
@@ -40,6 +46,32 @@ public class FacultyControllerRestTemplateTest {
         student.setAge(17);
         student.setFaculty(faculty);
         return restTemplate.postForObject(getUrl("/student"), student, Student.class);
+    }
+
+    // Метод для очистки данных
+    private void cleanUp() {
+        if (testStudent != null && testStudent.getId() != null) {
+            restTemplate.delete(getUrl("/student/" + testStudent.getId()));
+        }
+        if (testFaculty != null && testFaculty.getId() != null) {
+            restTemplate.delete(getUrl("/faculty/" + testFaculty.getId()));
+        }
+    }
+
+    @BeforeEach
+    void setUp() {
+        testFaculty = createTestFaculty();
+        testStudent = createTestStudent(testFaculty);
+    }
+
+    @AfterEach
+    void tearDown() {
+        cleanUp();
+    }
+
+    @Test
+    void contextLoads() {
+        assertNotNull(restTemplate);
     }
 
     @Test
@@ -65,8 +97,6 @@ public class FacultyControllerRestTemplateTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(faculties).isNotNull();
         assertThat(faculties.length).isGreaterThan(0);
-
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 
     @Test
@@ -110,4 +140,3 @@ public class FacultyControllerRestTemplateTest {
         restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 }
-

@@ -1,6 +1,8 @@
 package ru.hogwarts.school;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +34,10 @@ class StudentControllerRestTemplateTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private Faculty testFaculty;
+    private Student testStudent1;
+    private Student testStudent2;
+
     private String getUrl(String path) {
         return "http://localhost:" + port + path;
     }
@@ -43,12 +49,26 @@ class StudentControllerRestTemplateTest {
         return restTemplate.postForObject(getUrl("/faculty"), faculty, Faculty.class);
     }
 
-    private Student createTestStudent(Faculty faculty) {
+    private Student createTestStudent(Faculty faculty, String name, int age) {
         Student student = new Student();
-        student.setName("TestStudent");
-        student.setAge(20);
+        student.setName(name);
+        student.setAge(age);
         student.setFaculty(faculty);
         return restTemplate.postForObject(getUrl("/student"), student, Student.class);
+    }
+
+    @BeforeEach
+    void setUp() {
+        testFaculty = createTestFaculty();
+        testStudent1 = createTestStudent(testFaculty, "TestStudent", 20);
+        testStudent2 = createTestStudent(testFaculty, "AAA", 0);
+    }
+
+    @AfterEach
+    void tearDown() {
+        restTemplate.delete(getUrl("/student/" + testStudent1.getId()));
+        restTemplate.delete(getUrl("/student/" + testStudent2.getId()));
+        restTemplate.delete(getUrl("/faculty/" + testFaculty.getId()));
     }
 
     @Test
@@ -58,27 +78,18 @@ class StudentControllerRestTemplateTest {
 
     @Test
     void testCreateAndGetStudent() {
-        Faculty faculty = createTestFaculty();
-        Student student = createTestStudent(faculty);
-
-        ResponseEntity<Student> response = restTemplate.getForEntity(getUrl("/student/" + student.getId()), Student.class);
+        ResponseEntity<Student> response = restTemplate.getForEntity(getUrl("/student/" + testStudent1.getId()), Student.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getName()).isEqualTo("TestStudent");
-
-        restTemplate.delete(getUrl("/student/" + student.getId()));
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 
     @Test
     void testEditStudent() {
-        Faculty faculty = createTestFaculty();
-        Student student = createTestStudent(faculty);
-
-        student.setName("UpdatedName");
-        HttpEntity<Student> request = new HttpEntity<>(student);
+        testStudent1.setName("UpdatedName");
+        HttpEntity<Student> request = new HttpEntity<>(testStudent1);
         ResponseEntity<Student> response = restTemplate.exchange(
-                getUrl("/student/" + student.getId()),
+                getUrl("/student/" + testStudent1.getId()),
                 HttpMethod.PUT,
                 request,
                 Student.class
@@ -86,33 +97,18 @@ class StudentControllerRestTemplateTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getName()).isEqualTo("UpdatedName");
-
-        restTemplate.delete(getUrl("/student/" + student.getId()));
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 
     @Test
     void testDeleteStudent() {
-        Faculty faculty = createTestFaculty();
-        Student student = createTestStudent(faculty);
+        restTemplate.delete(getUrl("/student/" + testStudent1.getId()));
 
-        restTemplate.delete(getUrl("/student/" + student.getId()));
-
-        ResponseEntity<Student> response = restTemplate.getForEntity(getUrl("/student/" + student.getId()), Student.class);
+        ResponseEntity<Student> response = restTemplate.getForEntity(getUrl("/student/" + testStudent1.getId()), Student.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 
     @Test
-    public void testGetAllStudents() { // не проходит
-
-        Faculty faculty = createTestFaculty();
-
-        Student student1 = createTestStudent(faculty);
-        Student student2 = new Student("AAA", 0);
-        student2.setFaculty(faculty);
-
+    void testGetAllStudents() {
         ResponseEntity<Student[]> response = restTemplate.exchange(
                 getUrl("/student"),
                 HttpMethod.GET,
@@ -121,50 +117,33 @@ class StudentControllerRestTemplateTest {
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
         Student[] students = response.getBody();
         assertThat(students).isNotNull();
         assertThat(students.length).isGreaterThanOrEqualTo(2);
 
         List<String> names = Arrays.stream(students).map(Student::getName).toList();
-        assertThat(names).contains("Harry", "Hermione");
-
-
-        restTemplate.delete(getUrl("/student/" + student1.getId()));
-        restTemplate.delete(getUrl("/student/" + student2.getId()));
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
+        assertThat(names).contains("TestStudent", "AAA");
     }
 
     @Test
     void testFindByAgeBetween() {
-        Faculty faculty = createTestFaculty();
-        Student student = createTestStudent(faculty);
-
         String url = String.format("/student/findByAgeBetween?min=%d&max=%d", 18, 25);
         ResponseEntity<Student[]> response = restTemplate.getForEntity(getUrl(url), Student[].class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().length).isGreaterThan(0);
-
-        restTemplate.delete(getUrl("/student/" + student.getId()));
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 
     @Test
     void testGetFacultyByStudent() {
-        Faculty faculty = createTestFaculty();
-        Student student = createTestStudent(faculty);
-
-        ResponseEntity<Faculty> response = restTemplate.getForEntity(getUrl("/student/" + student.getId() + "/faculty"), Faculty.class);
+        ResponseEntity<Faculty> response = restTemplate.getForEntity(getUrl("/student/" + testStudent1.getId() + "/faculty"), Faculty.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getName()).isEqualTo("TestFaculty");
-
-        restTemplate.delete(getUrl("/student/" + student.getId()));
-        restTemplate.delete(getUrl("/faculty/" + faculty.getId()));
     }
 }
+
 
 //
 //    @Test
