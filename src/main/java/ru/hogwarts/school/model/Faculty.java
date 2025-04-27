@@ -1,16 +1,13 @@
 package ru.hogwarts.school.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +16,16 @@ public class Faculty {
     private String name;
     private String color;
 
-    @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Student> students = new ArrayList<>();
+    @OneToMany(mappedBy = "faculty")
+    //fetch = FetchType.LAZY)
+//    @JsonManagedReference
+    private Set<Student> students = new HashSet<>();
 
     public Faculty() {
     }
 
-    public List<Student> getStudents() {
+    @JsonIgnore
+    public Set<Student> getStudents() {
         return students;
     }
 
@@ -51,11 +50,11 @@ public class Faculty {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,7 +62,7 @@ public class Faculty {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Faculty faculty)) return false;
-        return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(color, faculty.color);
+        return Objects.equals(id, faculty.id) && Objects.equals(name, faculty.name) && Objects.equals(color, faculty.color);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +9,10 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -46,15 +49,18 @@ public class StudentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        Student foundStudent = studentService.findStudent(id);
+        if (foundStudent == null) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         studentService.deleteStudents(id);
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping
-    public ResponseEntity<Collection<Student>> getAllStudents() {
-        Collection<Student> allStudent = studentService.getAllStudents();
-        if (allStudent == null) {
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> allStudent = new ArrayList<>(studentService.getAllStudents());
+        if (allStudent == null || allStudent.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(allStudent);

@@ -36,7 +36,7 @@ public class FacultyController {
         return facultyService.createFaculty(faculty);
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty, @PathVariable Long id) {
         Faculty foundFaculty = facultyService.editFaculty(id, faculty);
         if (foundFaculty == null) {
@@ -46,7 +46,7 @@ public class FacultyController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Var> deleteFaculty(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculties(id);
         return ResponseEntity.ok().build();
     }
