@@ -42,7 +42,7 @@ public class StudentController {
     public ResponseEntity<Student> editStudent(@RequestBody Student student, @PathVariable Long id) {
         Student foundStudent = studentService.editStudent(id, student);
         if (foundStudent == null) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(foundStudent);
     }
