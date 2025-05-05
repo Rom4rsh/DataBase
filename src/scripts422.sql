@@ -1,0 +1,15 @@
+--Step 2
+CREATE TABLE car(
+car_id SERIAL PRIMARY KEY ,
+brand VARCHAR(50) NOT NULL,
+price NUMERIC(10,2);
+)
+
+CREATE TABLE person(
+person_id SERIAL PRIMARY KEY,
+name VARCHAR(50) NOT NULL,
+age INTEGER NOT NULL,
+driver_licence BOOLEAN NOT NULL,
+car_id INT,
+CONSTRAINT fk_car FOREIGN KEY(car_id) REFERENCES car(car_id)
+);

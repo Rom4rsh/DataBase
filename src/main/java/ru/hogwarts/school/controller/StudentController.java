@@ -33,6 +33,9 @@ public class StudentController {
 
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
+        if (student.getAge() == null) {
+            student.setAge(20);
+        }
         return studentService.createStudent(student);
     }
 
