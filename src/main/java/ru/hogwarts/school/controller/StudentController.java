@@ -18,12 +18,10 @@ import java.util.Objects;
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
-    private final StudentRepository studentRepository;
 
     @Autowired
     public StudentController(StudentService studentService, StudentRepository studentRepository) {
         this.studentService = studentService;
-        this.studentRepository = studentRepository;
     }
 
 
@@ -107,22 +105,12 @@ public class StudentController {
 
     @GetMapping("/names-starting-with-a")
     public List<String> getNameStartingWithA() {
-        return studentRepository.findAll().stream()
-                .map(Student::getName)
-                .filter(Objects::nonNull)
-                .filter(name -> name.toUpperCase().startsWith("A"))
-                .map(String::toUpperCase)
-                .sorted()
-                .toList();
+        return studentService.getNameStartingWithA();
     }
 
     @GetMapping("/avg-age-stream")
     public Double getAvgAgeStream() {
-        return studentRepository.findAll().stream()
-                .filter(s -> s.getAge() != null)
-                .mapToDouble(Student::getAge)
-                .average()
-                .orElse(0.0);
+        return studentService.getAvgAgeStream();
     }
 
 }

@@ -75,20 +75,12 @@ public class FacultyController {
 
     @GetMapping("/longest-faculty-name")
     public String getLongestFacultyName() {
-        return facultyService.getAllFaculty().stream()
-                .map(Faculty::getName)
-                .filter(Objects::nonNull)
-                .max(Comparator.comparingInt(String::length))
-                .orElse("No faculty");
+        return facultyService.getLongestFacultyName();
     }
 
     @GetMapping("/sum")
     public int getSum() {
-        int sum = Stream.iterate(1, a -> a + 1)
-                .parallel()
-                .limit(1_000_000)
-                .reduce(0, (a, b) -> a + b);
-        return sum;
+        return facultyService.getSum();
     }
 }
 
