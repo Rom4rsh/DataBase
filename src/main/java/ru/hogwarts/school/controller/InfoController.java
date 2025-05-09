@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class InfoController {
 
     @Value("${server.port}")
-    String port;
+    private String port;
 
     @GetMapping("/port")
-    public String getPort(){
+    public String getPort() {
         return "APP is running on port " + port;
     }
 }

@@ -21,4 +21,8 @@ public interface FacultyService {
 
     public List<Student> getStudentsByFaculty(Long facultyId);
 
+    public String getLongestFacultyName();
+
+    public int getSum();
+
 }

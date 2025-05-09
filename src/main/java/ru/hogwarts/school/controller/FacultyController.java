@@ -10,7 +10,11 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/faculty")
@@ -67,6 +71,16 @@ public class FacultyController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/longest-faculty-name")
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
+
+    @GetMapping("/sum")
+    public int getSum() {
+        return facultyService.getSum();
     }
 }
 
