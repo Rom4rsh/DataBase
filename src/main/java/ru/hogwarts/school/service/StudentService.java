@@ -31,4 +31,8 @@ public interface StudentService {
     public List<String> getNameStartingWithA();
 
     public Double getAvgAgeStream();
+
+    public void getParallelStudent();
+
+    public void getSynchronizedStudentNames();
 }

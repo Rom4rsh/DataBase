@@ -12,7 +12,6 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/student")
@@ -113,5 +112,14 @@ public class StudentController {
         return studentService.getAvgAgeStream();
     }
 
+    @GetMapping("/print-parallel")
+    public void getParallelStudentNames() {
+        studentService.getParallelStudent();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void getSynchronizedStudentNames() {
+        studentService.getSynchronizedStudentNames();
+    }
 }
 
